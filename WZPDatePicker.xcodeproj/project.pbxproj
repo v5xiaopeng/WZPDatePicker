@@ -13,6 +13,7 @@
 		045F003F235EA29B0092E73B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 045F003E235EA29B0092E73B /* Assets.xcassets */; };
 		045F0042235EA29B0092E73B /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 045F0040235EA29B0092E73B /* LaunchScreen.storyboard */; };
 		045F0045235EA29B0092E73B /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F0044235EA29B0092E73B /* main.m */; };
+		045F0071235EA8280092E73B /* WZPDatePickerView.m in Sources */ = {isa = PBXBuildFile; fileRef = 045F0070235EA8280092E73B /* WZPDatePickerView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,8 @@
 		045F0041235EA29B0092E73B /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		045F0043235EA29B0092E73B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		045F0044235EA29B0092E73B /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		045F006F235EA8280092E73B /* WZPDatePickerView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WZPDatePickerView.h; sourceTree = "<group>"; };
+		045F0070235EA8280092E73B /* WZPDatePickerView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = WZPDatePickerView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +61,7 @@
 		045F0034235EA28D0092E73B /* WZPDatePicker */ = {
 			isa = PBXGroup;
 			children = (
+				045F006E235EA8070092E73B /* WZPDatePicker */,
 				045F0035235EA28D0092E73B /* AppDelegate.h */,
 				045F0036235EA28D0092E73B /* AppDelegate.m */,
 				045F0038235EA28D0092E73B /* ViewController.h */,
@@ -67,6 +71,15 @@
 				045F0040235EA29B0092E73B /* LaunchScreen.storyboard */,
 				045F0043235EA29B0092E73B /* Info.plist */,
 				045F0044235EA29B0092E73B /* main.m */,
+			);
+			path = WZPDatePicker;
+			sourceTree = "<group>";
+		};
+		045F006E235EA8070092E73B /* WZPDatePicker */ = {
+			isa = PBXGroup;
+			children = (
+				045F006F235EA8280092E73B /* WZPDatePickerView.h */,
+				045F0070235EA8280092E73B /* WZPDatePickerView.m */,
 			);
 			path = WZPDatePicker;
 			sourceTree = "<group>";
@@ -143,6 +156,7 @@
 			files = (
 				045F003A235EA28D0092E73B /* ViewController.m in Sources */,
 				045F0045235EA29B0092E73B /* main.m in Sources */,
+				045F0071235EA8280092E73B /* WZPDatePickerView.m in Sources */,
 				045F0037235EA28D0092E73B /* AppDelegate.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
