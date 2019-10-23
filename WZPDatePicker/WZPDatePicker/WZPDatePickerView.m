@@ -29,6 +29,8 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     UIView *_bottomBgView;
     UIDatePicker *_bottomDatePicker;
     UIPickerView *_bottomPicker;
+    NSDate *_minimumDate;
+    NSDate *_maximumDate;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -189,8 +191,10 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         }
     }
     NSDate *date = [self componentsToDate:components];
-    
-    return date;
+    if (date >= _minimumDate && date <= _maximumDate) {
+        return date;
+    }
+    return _currentDate;
 }
 
 //  当前日期点击Action，选择日期
@@ -278,26 +282,9 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         //设置地区: zh-中国
         _bottomDatePicker.locale = [NSLocale localeWithLocaleIdentifier:@"zh"];
         //        [_bottomDatePicker addTarget:self action:@selector(bottomDatePickerChanged:) forControlEvents:UIControlEventValueChanged];
-        NSDateComponents *components = [self dateToComponents:[NSDate date]];
-        if (_datePickerType == WZPDatePickerTypeYear) {
-            components.year -= self.minimum;
-            _bottomDatePicker.minimumDate = [self componentsToDate:components];
-            components.year += self.minimum;
-            components.year += self.maximum;
-            _bottomDatePicker.maximumDate = [self componentsToDate:components];
-        }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
-            components.month -= self.minimum;
-            _bottomDatePicker.minimumDate = [self componentsToDate:components];
-            components.month += self.minimum;
-            components.month += self.maximum;
-            _bottomDatePicker.maximumDate = [self componentsToDate:components];
-        }else{
-            components.day -= self.minimum;
-            _bottomDatePicker.minimumDate = [self componentsToDate:components];
-            components.day += self.minimum;
-            components.day += self.maximum;
-            _bottomDatePicker.maximumDate = [self componentsToDate:components];
-        }
+        //  设置范围
+        _bottomDatePicker.minimumDate = _minimumDate;
+        _bottomDatePicker.maximumDate = _maximumDate;
         [_bottomBgView addSubview:_bottomDatePicker];
         [_bottomDatePicker mas_makeConstraints:^(MASConstraintMaker *make) {
             make.left.bottom.right.equalTo(self->_bottomBgView);
@@ -328,23 +315,23 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 - (void)setMinimum:(NSInteger)min andMaximum:(NSInteger)max{
     NSDateComponents *components = [self dateToComponents:[NSDate date]];
     if (_datePickerType == WZPDatePickerTypeYear) {
-        components.year -= self.minimum;
-        _bottomDatePicker.minimumDate = [self componentsToDate:components];
-        components.year += self.minimum;
-        components.year += self.maximum;
-        _bottomDatePicker.maximumDate = [self componentsToDate:components];
+        components.year -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.year += min;
+        components.year += max;
+        _maximumDate = [self componentsToDate:components];
     }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
-        components.month -= self.minimum;
-        _bottomDatePicker.minimumDate = [self componentsToDate:components];
-        components.month += self.minimum;
-        components.month += self.maximum;
-        _bottomDatePicker.maximumDate = [self componentsToDate:components];
+        components.month -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.month += min;
+        components.month += max;
+        _maximumDate = [self componentsToDate:components];
     }else{
-        components.day -= self.minimum;
-        _bottomDatePicker.minimumDate = [self componentsToDate:components];
-        components.day += self.minimum;
-        components.day += self.maximum;
-        _bottomDatePicker.maximumDate = [self componentsToDate:components];
+        components.day -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.day += min;
+        components.day += max;
+        _maximumDate = [self componentsToDate:components];
     }
 }
 

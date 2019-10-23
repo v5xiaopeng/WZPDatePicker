@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerType)
  */
 - (id)initWithDatePickerType:(WZPDatePickerType)type;
 
-//- (void)setMinimum:(NSInteger)min andMaximum:(NSInteger)max;
+- (void)setMinimum:(NSInteger)min andMaximum:(NSInteger)max;
 
 /** 选择日期控件类型 */
 @property (nonatomic,  assign) WZPDatePickerType datePickerType;
@@ -35,9 +35,9 @@ typedef NS_ENUM(NSInteger, WZPDatePickerType)
 typedef void(^WZPDateChanged)(id date);
 @property (nonatomic,   copy) WZPDateChanged dateChanged;
 
-//  往前范围
-@property (nonatomic,  assign) NSInteger minimum;
-//  往后范围
-@property (nonatomic,  assign) NSInteger maximum;
+////  往前范围
+//@property (nonatomic,  assign) NSInteger minimum;
+////  往后范围
+//@property (nonatomic,  assign) NSInteger maximum;
 
 @end

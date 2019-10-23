@@ -10,7 +10,7 @@ sed -i "" "${LineNumber}s/${VersionNumber}/${NewVersionNumber}/g" WZPDatePicker.
 echo "current version is ${VersionNumber}, new version is ${NewVersionNumber}"
 
 git add .
-git commit -am '第一个可用版本'#${NewVersionNumber}
+git commit -am '日期选择范围限定'#${NewVersionNumber}
 git tag ${NewVersionNumber}
 git push origin master --tags
 pod repo push WZPRepoSpecs WZPDatePicker.podspec --verbose --allow-warnings --use-libraries --use-modular-headers

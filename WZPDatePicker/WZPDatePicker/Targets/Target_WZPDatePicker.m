@@ -57,8 +57,9 @@ static WZPDatePickerView *__datePickerView;
 - (void)Action_setMinimumAndMaximum:(NSDictionary *)params{
     NSInteger minimumInt = [params[@"minimum"] integerValue];
     NSInteger maximumInt = [params[@"maximum"] integerValue];
-    __datePickerView.minimum = minimumInt;
-    __datePickerView.maximum = maximumInt;
+//    __datePickerView.minimum = minimumInt;
+//    __datePickerView.maximum = maximumInt;
+    [__datePickerView setMinimum:minimumInt andMaximum:maximumInt];
 }
 
 /**
