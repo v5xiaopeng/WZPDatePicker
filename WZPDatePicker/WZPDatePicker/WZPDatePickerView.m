@@ -15,9 +15,9 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     WZPDatePickerChangeTypeNext         // 下一个
 };
 
-@interface WZPDatePickerView()<UIPickerViewDelegate,UIPickerViewDataSource>
-
-@end
+//@interface WZPDatePickerView()<UIPickerViewDelegate,UIPickerViewDataSource>
+//
+//@end
 
 @implementation WZPDatePickerView{
     UIButton *_lastBtn;
@@ -183,7 +183,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
-        self.dateChanged(dateStr);
+        self.dateChanged(_currentDate);
     }
 }
 - (void)nextButtonClick{
@@ -192,7 +192,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
-        self.dateChanged(dateStr);
+        self.dateChanged(_currentDate);
     }
 }
 
@@ -345,7 +345,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
-        self.dateChanged(dateStr);
+        self.dateChanged(_currentDate);
     }
 }
 
