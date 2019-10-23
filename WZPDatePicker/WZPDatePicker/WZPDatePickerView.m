@@ -87,6 +87,35 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     _dateChanged = dateChanged;
 }
 
+/**
+ 设置日期选择范围
+ 
+ @param min 往前多少 根据WZPDatePickerType单位分别为 年/月/日
+ @param max 往后多少 根据WZPDatePickerType单位分别为 年/月/日
+ */
+- (void)setMinimum:(NSInteger)min andMaximum:(NSInteger)max{
+    NSDateComponents *components = [self dateToComponents:[NSDate date]];
+    if (_datePickerType == WZPDatePickerTypeYear) {
+        components.year -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.year += min;
+        components.year += max;
+        _maximumDate = [self componentsToDate:components];
+    }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
+        components.month -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.month += min;
+        components.month += max;
+        _maximumDate = [self componentsToDate:components];
+    }else{
+        components.day -= min;
+        _minimumDate = [self componentsToDate:components];
+        components.day += min;
+        components.day += max;
+        _maximumDate = [self componentsToDate:components];
+    }
+}
+
 #pragma mark - UI初始化
 //  初始化顶部view
 - (void)initTopView{
@@ -196,6 +225,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     return _currentDate;
 }
 
+#pragma mark - 底部UIDatePicker
 //  当前日期点击Action，选择日期
 - (void)yearMonthDayButtonClick{
     NSLog(@"选择日期");
@@ -301,36 +331,6 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         }];
     }else{
 //        [self closeBottomDatePicker];
-    }
-}
-
-
-/**
- 设置日期选择范围
-
- @param min 往前多少 根据WZPDatePickerType单位分别为 年/月/日
- @param max 往后多少 根据WZPDatePickerType单位分别为 年/月/日
- */
-- (void)setMinimum:(NSInteger)min andMaximum:(NSInteger)max{
-    NSDateComponents *components = [self dateToComponents:[NSDate date]];
-    if (_datePickerType == WZPDatePickerTypeYear) {
-        components.year -= min;
-        _minimumDate = [self componentsToDate:components];
-        components.year += min;
-        components.year += max;
-        _maximumDate = [self componentsToDate:components];
-    }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
-        components.month -= min;
-        _minimumDate = [self componentsToDate:components];
-        components.month += min;
-        components.month += max;
-        _maximumDate = [self componentsToDate:components];
-    }else{
-        components.day -= min;
-        _minimumDate = [self componentsToDate:components];
-        components.day += min;
-        components.day += max;
-        _maximumDate = [self componentsToDate:components];
     }
 }
 
