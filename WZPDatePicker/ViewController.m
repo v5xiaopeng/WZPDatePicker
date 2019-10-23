@@ -7,6 +7,8 @@
 //
 
 #import "ViewController.h"
+#import <Masonry/Masonry.h>
+#import "WZPDatePickerView.h"
 
 @interface ViewController ()
 
@@ -17,6 +19,19 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    WZPDatePickerView *datePicker = [[WZPDatePickerView alloc]init];
+    datePicker.datePickerType = WZPDatePickerTypeYear;
+    datePicker.minimum = 3;
+    datePicker.maximum = 4;
+    [self.view addSubview:datePicker];
+    datePicker.dateChanged = ^(id date) {
+        NSLog(@"%@",date);
+    };
+    [datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
+        make.top.mas_equalTo(40);
+        make.left.right.equalTo(self.view);
+        make.height.mas_equalTo(50);
+    }];
 }
 
 
