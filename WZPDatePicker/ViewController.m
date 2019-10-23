@@ -20,10 +20,10 @@
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
     WZPDatePickerView *datePicker = [[WZPDatePickerView alloc]init];
-    datePicker.datePickerType = WZPDatePickerTypeYear;
+    datePicker.datePickerType = WZPDatePickerTypeDefault;
 //    datePicker.minimum = 3;
 //    datePicker.maximum = 4;
-    [datePicker setMinimum:3 andMaximum:4];
+    [datePicker setMinimum:33 andMaximum:40];
     [self.view addSubview:datePicker];
     datePicker.dateChanged = ^(id date) {
         NSLog(@"%@",date);

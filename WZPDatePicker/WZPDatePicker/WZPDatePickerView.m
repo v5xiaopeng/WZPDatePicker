@@ -149,7 +149,6 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 
 #pragma mark - actions
 - (void)lastButtonClick{
-    NSLog(@"上一天");
     _currentDate = [self getChangedDateWithType:WZPDatePickerChangeTypeLast];
     
     NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
@@ -159,7 +158,6 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     }
 }
 - (void)nextButtonClick{
-    NSLog(@"下一天");
     _currentDate = [self getChangedDateWithType:WZPDatePickerChangeTypeNext];
     
     NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
@@ -191,7 +189,8 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         }
     }
     NSDate *date = [self componentsToDate:components];
-    if (date >= _minimumDate && date <= _maximumDate) {
+    //  超出范围返回原值
+    if ([date compare:_minimumDate] >= 0 && [date compare:_maximumDate] <= 0) {
         return date;
     }
     return _currentDate;
