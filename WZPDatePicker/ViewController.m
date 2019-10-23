@@ -31,7 +31,7 @@
     [datePicker mas_makeConstraints:^(MASConstraintMaker *make) {
         make.top.mas_equalTo(40);
         make.left.right.equalTo(self.view);
-        make.height.mas_equalTo(50);
+        make.height.mas_equalTo(40);
     }];
 }
 

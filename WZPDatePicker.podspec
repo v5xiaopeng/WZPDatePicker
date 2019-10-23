@@ -16,7 +16,7 @@ Pod::Spec.new do |s|
   #
 
   s.name         = "WZPDatePicker"
-  s.version      = "8"
+  s.version      = "9"
   s.summary      = "WZPDatePicker."
 
   # This description is used to generate tags and improve search results.

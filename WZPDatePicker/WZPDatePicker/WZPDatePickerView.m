@@ -123,8 +123,8 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     topBgView.backgroundColor = [UIColor whiteColor];
     [self addSubview:topBgView];
     [topBgView mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.top.left.right.equalTo(self);
-        make.height.mas_equalTo(50);
+        make.top.left.bottom.right.equalTo(self);
+//        make.height.mas_equalTo(self.mas_height);
     }];
     
     //  上一天（月/年）
@@ -158,21 +158,22 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     _nextBtn.layer.borderWidth = 0.5;
     [topBgView addSubview:_nextBtn];
     [_yearMonthDayBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.center.equalTo(topBgView);
+        make.top.mas_equalTo(3.0);
+        make.bottom.mas_equalTo(-3.0);
+        make.centerX.equalTo(topBgView.mas_centerX);
         make.width.mas_equalTo([UIScreen mainScreen].bounds.size.width/2.0);
-        make.height.mas_equalTo(44.0);
     }];
     [_lastBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(topBgView);
+        make.top.mas_equalTo(3.0);
         make.left.mas_equalTo(3.0);
-        make.height.mas_equalTo(44.0);
+        make.bottom.mas_equalTo(-3.0);
         make.right.equalTo(self->_yearMonthDayBtn.mas_left).offset(-3.0);
     }];
     [_nextBtn mas_makeConstraints:^(MASConstraintMaker *make) {
-        make.centerY.equalTo(topBgView);
-        make.right.mas_equalTo(-3.0);
-        make.height.mas_equalTo(44.0);
+        make.top.mas_equalTo(3.0);
         make.left.equalTo(self->_yearMonthDayBtn.mas_right).offset(3.0);
+        make.bottom.mas_equalTo(-3.0);
+        make.right.mas_equalTo(-3.0);
     }];
 }
 
