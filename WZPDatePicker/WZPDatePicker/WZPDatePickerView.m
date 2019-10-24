@@ -15,9 +15,9 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     WZPDatePickerChangeTypeNext         // 下一个
 };
 
-//@interface WZPDatePickerView()<UIPickerViewDelegate,UIPickerViewDataSource>
-//
-//@end
+@interface WZPDatePickerView()<UIPickerViewDelegate,UIPickerViewDataSource>
+
+@end
 
 @implementation WZPDatePickerView{
     UIButton *_lastBtn;
@@ -31,6 +31,11 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     UIPickerView *_bottomPicker;
     NSDate *_minimumDate;
     NSDate *_maximumDate;
+    //  pickerView相关
+    NSMutableArray *_yearData;
+    NSArray *_monthData;
+    NSInteger _currentYearIndex;
+    NSInteger _currentMonthIndex;
 }
 
 - (id)initWithFrame:(CGRect)frame{
@@ -55,14 +60,27 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         self.datePickerType = type;
         if (_datePickerType == WZPDatePickerTypeYear) {
             [_dateFormatter setDateFormat: @"yyyy年"];
+            _yearData = [[NSMutableArray alloc]initWithCapacity:0];
         }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
             [_dateFormatter setDateFormat: @"yyyy年MM月"];
+            _yearData = [[NSMutableArray alloc]initWithCapacity:0];
+            _monthData = @[@"1月",@"2月",@"3月",@"4月",@"5月",@"6月",@"7月",@"8月",@"9月",@"10月",@"11月",@"12月"];
         }else{
             [_dateFormatter setDateFormat: @"yyyy年MM月dd日"];
         }
         [self initTopView];
     }
     return self;
+}
+
+//  获取年份数据
+- (void)getYearDateWithType{
+    NSDateComponents *minimumCom = [self dateToComponents:_minimumDate];
+    NSDateComponents *maximumCom = [self dateToComponents:_maximumDate];
+    [_yearData removeAllObjects];
+    for (int i = 0; i < (maximumCom.year - minimumCom.year + 1); i++) {
+        [_yearData addObject:[NSString stringWithFormat:@"%ld年",(long)minimumCom.year + i]];
+    }
 }
 
 #pragma mark - 一些属性的set方法
@@ -181,7 +199,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 - (void)lastButtonClick{
     _currentDate = [self getChangedDateWithType:WZPDatePickerChangeTypeLast];
     
-    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
+//    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
         self.dateChanged(_currentDate);
@@ -190,7 +208,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 - (void)nextButtonClick{
     _currentDate = [self getChangedDateWithType:WZPDatePickerChangeTypeNext];
     
-    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
+//    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
         self.dateChanged(_currentDate);
@@ -282,44 +300,46 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
             make.height.mas_equalTo(0.5);
         }];
         
-//        if (_datePickerType == WZPDatePickerTypeYearAndMonth || _datePickerType == WZPDatePickerTypeYear) {
-//            //  年月类型和年类型，用UIPickerView
-//            _bottomPicker = [[UIPickerView alloc]init];
-//            _bottomPicker.delegate = self;
-//            _bottomPicker.dataSource = self;
-//            [_dateFormatter setDateFormat:@"yyyy"];
-//            NSString *currentYear = [_dateFormatter stringFromDate:_currentDate];
-//            //设置pickerView默认选中当前时间
-//            [_bottomPicker selectRow:[currentYear integerValue] - 1970 inComponent:0 animated:YES];
-//            if (_datePickerType == WZPDatePickerTypeYearAndMonth) {
-//                [_dateFormatter setDateFormat:@"MM"];
-//                NSString *currentMonth = [_dateFormatter stringFromDate:_currentDate];
-//                [_bottomPicker selectRow:[currentMonth integerValue] - 1 inComponent:1 animated:YES];
-//            }
-//            [_bottomBgView addSubview:_bottomPicker];
-//            [_bottomPicker mas_makeConstraints:^(MASConstraintMaker *make) {
-//                make.left.bottom.right.equalTo(self->_bottomBgView);
-//                make.height.mas_equalTo(235);
-//            }];
-//        }else{
-//            //  年月日类型，用系统UIDatePicker
-//        }
+        if (_datePickerType == WZPDatePickerTypeYearAndMonth || _datePickerType == WZPDatePickerTypeYear) {
+            //  年月类型和年类型，用UIPickerView
+            [self getYearDateWithType];
+            _bottomPicker = [[UIPickerView alloc]init];
+            _bottomPicker.delegate = self;
+            _bottomPicker.dataSource = self;
+            
+            //设置pickerView默认选中当前时间
+            NSDateComponents *currentCom = [self dateToComponents:_currentDate];
+            NSDateComponents *minimumCom = [self dateToComponents:_minimumDate];
+            [_bottomPicker selectRow:currentCom.year - minimumCom.year inComponent:0 animated:YES];
+            _currentYearIndex = currentCom.year - minimumCom.year;
+            if (_datePickerType == WZPDatePickerTypeYearAndMonth) {
+                [_bottomPicker selectRow:currentCom.month - 1 inComponent:1 animated:YES];
+                _currentMonthIndex = currentCom.month - 1;
+            }
+            
+            [_bottomBgView addSubview:_bottomPicker];
+            [_bottomPicker mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.bottom.right.equalTo(self->_bottomBgView);
+                make.height.mas_equalTo(235);
+            }];
+        }else{
+            //  年月日类型，用系统UIDatePicker
+            //  日期选择器
+            _bottomDatePicker = [[UIDatePicker alloc]init];
+            [_bottomDatePicker setDate:_currentDate animated:YES];
+            _bottomDatePicker.datePickerMode = UIDatePickerModeDate;
+            //设置地区: zh-中国
+            _bottomDatePicker.locale = [NSLocale localeWithLocaleIdentifier:@"zh"];
+            //  设置范围
+            _bottomDatePicker.minimumDate = _minimumDate;
+            _bottomDatePicker.maximumDate = _maximumDate;
+            [_bottomBgView addSubview:_bottomDatePicker];
+            [_bottomDatePicker mas_makeConstraints:^(MASConstraintMaker *make) {
+                make.left.bottom.right.equalTo(self->_bottomBgView);
+                make.height.mas_equalTo(235);
+            }];
+        }
         
-        //  日期选择器
-        _bottomDatePicker = [[UIDatePicker alloc]init];
-        [_bottomDatePicker setDate:_currentDate animated:YES];
-        _bottomDatePicker.datePickerMode = UIDatePickerModeDate;
-        //设置地区: zh-中国
-        _bottomDatePicker.locale = [NSLocale localeWithLocaleIdentifier:@"zh"];
-        //        [_bottomDatePicker addTarget:self action:@selector(bottomDatePickerChanged:) forControlEvents:UIControlEventValueChanged];
-        //  设置范围
-        _bottomDatePicker.minimumDate = _minimumDate;
-        _bottomDatePicker.maximumDate = _maximumDate;
-        [_bottomBgView addSubview:_bottomDatePicker];
-        [_bottomDatePicker mas_makeConstraints:^(MASConstraintMaker *make) {
-            make.left.bottom.right.equalTo(self->_bottomBgView);
-            make.height.mas_equalTo(235);
-        }];
         //  刷新位置
         [self.superview layoutIfNeeded];
         [UIView animateWithDuration:0.5 animations:^{
@@ -341,9 +361,19 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 }
 - (void)bottomConfirmButtonClick{
     //  点击确定按钮，更新当前日期刷新相关UI显示
-    _currentDate = _bottomDatePicker.date;
+    if (_datePickerType == WZPDatePickerTypeYear || _datePickerType == WZPDatePickerTypeYearAndMonth) {
+        NSDateComponents *minimumCom = [self dateToComponents:_minimumDate];
+        NSDateComponents *currentCom = [[NSDateComponents alloc]init];
+        currentCom.year = minimumCom.year + _currentYearIndex;
+        if (_datePickerType == WZPDatePickerTypeYearAndMonth) {
+            currentCom.month = _currentMonthIndex + 1;
+        }
+        _currentDate = [self componentsToDate:currentCom];
+    }else{
+        _currentDate = _bottomDatePicker.date;
+    }
     [self closeBottomDatePicker];
-    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
+//    NSString *dateStr = [_dateFormatter stringFromDate:_currentDate];
     [self reloadCurrentDateYearMonthDay];
     if (self.dateChanged) {
         self.dateChanged(_currentDate);
@@ -371,7 +401,73 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 - (void)reloadCurrentDateYearMonthDay{
     NSString *todayStr = [_dateFormatter stringFromDate:_currentDate];
     [_yearMonthDayBtn setTitle:todayStr forState:UIControlStateNormal];
-    
+}
+
+#pragma mark - UIPickerViewDataSource UIPickerViewDelegate
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+        return 1;
+    } else {
+        return 2;
+    }
+}
+
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+        return _yearData.count;
+    } else {
+        if (component == 0) {
+            return _yearData.count;
+        } else {
+            return _monthData.count;
+        }
+    }
+    return 0;
+}
+
+- (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
+    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+        return _yearData[row];
+    } else {
+        if (component == 0) {
+            return _yearData[row];
+        } else {
+            return _monthData[row];
+        }
+    }
+    return @"";
+}
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
+    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+        NSLog(@"%@",_yearData[row]);
+        _currentYearIndex = row;
+    } else {
+        if (component == 0) {
+            NSLog(@"%@",_yearData[row]);
+            [pickerView reloadComponent:1];
+            _currentYearIndex = row;
+        } else {
+            NSLog(@"%@",_monthData[row]);
+            _currentMonthIndex = row;
+        }
+        NSDateComponents *minimumCom = [self dateToComponents:_minimumDate];
+        NSDateComponents *maximumCom = [self dateToComponents:_maximumDate];
+        NSDateComponents *currentCom = [[NSDateComponents alloc]init];
+        currentCom.year = minimumCom.year + _currentYearIndex;
+        if (_datePickerType == WZPDatePickerTypeYearAndMonth) {
+            currentCom.month = _currentMonthIndex + 1;
+        }
+        NSDate *currentDate = [self componentsToDate:currentCom];
+        if ([currentDate compare:_minimumDate] < 0) {
+            [_bottomPicker selectRow:minimumCom.month - 1 inComponent:1 animated:YES];
+            _currentMonthIndex = minimumCom.month - 1;
+        }
+        if ([currentDate compare:_maximumDate] > 0) {
+            [_bottomPicker selectRow:maximumCom.month - 1 inComponent:1 animated:YES];
+            _currentMonthIndex = maximumCom.month - 1;
+        }
+    }
 }
 #pragma mark - NSDate和NSCompontents转换
 - (NSDateComponents *)dateToComponents:(NSDate *)date{
