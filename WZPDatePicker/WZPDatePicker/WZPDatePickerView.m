@@ -38,18 +38,18 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     NSInteger _currentMonthIndex;
 }
 
-- (id)initWithFrame:(CGRect)frame{
-    self = [super initWithFrame:frame];
-    if (self) {
-        _currentDate = [NSDate date];
-        _greCalendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
-        _dateFormatter = [[NSDateFormatter alloc]init];
-        [_dateFormatter setDateFormat: @"yyyy年MM月dd日"];
-        self.datePickerType = WZPDatePickerTypeDefault;
-        [self initTopView];
-    }
-    return self;
-}
+//- (id)initWithFrame:(CGRect)frame{
+//    self = [super initWithFrame:frame];
+//    if (self) {
+//        _currentDate = [NSDate date];
+//        _greCalendar = [[NSCalendar alloc]initWithCalendarIdentifier:NSCalendarIdentifierGregorian];
+//        _dateFormatter = [[NSDateFormatter alloc]init];
+//        [_dateFormatter setDateFormat: @"yyyy年MM月dd日"];
+//        self.datePickerType = WZPDatePickerTypeDefault;
+//        [self initTopView];
+//    }
+//    return self;
+//}
 
 - (id)initWithDatePickerType:(WZPDatePickerType)type{
     self = [super init];
@@ -244,7 +244,13 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
     return _currentDate;
 }
 
-#pragma mark - 底部UIDatePicker
+//  刷新当前日期显示
+- (void)reloadCurrentDateYearMonthDay{
+    NSString *todayStr = [_dateFormatter stringFromDate:_currentDate];
+    [_yearMonthDayBtn setTitle:todayStr forState:UIControlStateNormal];
+}
+
+#pragma mark - 底部DatePicker
 //  当前日期点击Action，选择日期
 - (void)yearMonthDayButtonClick{
     NSLog(@"选择日期");
@@ -397,11 +403,6 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         self.userInteractionEnabled = YES;
     }];
 }
-//  刷新当前日期显示
-- (void)reloadCurrentDateYearMonthDay{
-    NSString *todayStr = [_dateFormatter stringFromDate:_currentDate];
-    [_yearMonthDayBtn setTitle:todayStr forState:UIControlStateNormal];
-}
 
 #pragma mark - UIPickerViewDataSource UIPickerViewDelegate
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
@@ -458,7 +459,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
             currentCom.month = _currentMonthIndex + 1;
         }
         NSDate *currentDate = [self componentsToDate:currentCom];
-        //  超出限定范围，超出最小滚动到最小日期，超出最大滚动到最大日期
+        //  超出限定范围，超出最小日期，滚动到最小日期，超出最大日期，滚动到最大日期
         if ([currentDate compare:_minimumDate] < 0) {
             [_bottomPicker selectRow:minimumCom.month - 1 inComponent:1 animated:YES];
             _currentMonthIndex = minimumCom.month - 1;
