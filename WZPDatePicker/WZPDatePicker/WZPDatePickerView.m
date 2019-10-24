@@ -405,7 +405,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 
 #pragma mark - UIPickerViewDataSource UIPickerViewDelegate
 - (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
-    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+    if (_datePickerType == WZPDatePickerTypeYear) {
         return 1;
     } else {
         return 2;
@@ -413,7 +413,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
 }
 
 - (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
-    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+    if (_datePickerType == WZPDatePickerTypeYear) {
         return _yearData.count;
     } else {
         if (component == 0) {
@@ -422,11 +422,12 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
             return _monthData.count;
         }
     }
+    
     return 0;
 }
 
 - (NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component {
-    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
+    if (_datePickerType == WZPDatePickerTypeYear) {
         return _yearData[row];
     } else {
         if (component == 0) {
@@ -435,20 +436,18 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
             return _monthData[row];
         }
     }
+    
     return @"";
 }
 
+
 - (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component {
-    if (_datePickerType == WZPDatePickerTypeYear) {//只选择年
-        NSLog(@"%@",_yearData[row]);
+    if (_datePickerType == WZPDatePickerTypeYear) {
         _currentYearIndex = row;
     } else {
         if (component == 0) {
-            NSLog(@"%@",_yearData[row]);
-            [pickerView reloadComponent:1];
             _currentYearIndex = row;
-        } else {
-            NSLog(@"%@",_monthData[row]);
+        }else{
             _currentMonthIndex = row;
         }
         NSDateComponents *minimumCom = [self dateToComponents:_minimumDate];
@@ -459,6 +458,7 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
             currentCom.month = _currentMonthIndex + 1;
         }
         NSDate *currentDate = [self componentsToDate:currentCom];
+        //  超出限定范围，超出最小滚动到最小日期，超出最大滚动到最大日期
         if ([currentDate compare:_minimumDate] < 0) {
             [_bottomPicker selectRow:minimumCom.month - 1 inComponent:1 animated:YES];
             _currentMonthIndex = minimumCom.month - 1;
