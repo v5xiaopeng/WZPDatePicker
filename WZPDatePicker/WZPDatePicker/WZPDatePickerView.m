@@ -193,6 +193,17 @@ typedef NS_ENUM(NSInteger, WZPDatePickerChangeType)
         make.bottom.mas_equalTo(-3.0);
         make.right.mas_equalTo(-3.0);
     }];
+    
+    if (_datePickerType == WZPDatePickerTypeYear) {
+        [_lastBtn setTitle:@"上一年" forState:UIControlStateNormal];
+        [_nextBtn setTitle:@"下一年" forState:UIControlStateNormal];
+    }else if (_datePickerType == WZPDatePickerTypeYearAndMonth){
+        [_lastBtn setTitle:@"上一月" forState:UIControlStateNormal];
+        [_nextBtn setTitle:@"下一月" forState:UIControlStateNormal];
+    }else{
+        [_lastBtn setTitle:@"上一天" forState:UIControlStateNormal];
+        [_nextBtn setTitle:@"下一天" forState:UIControlStateNormal];
+    }
 }
 
 #pragma mark - actions
